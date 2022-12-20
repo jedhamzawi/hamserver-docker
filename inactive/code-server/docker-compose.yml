@@ -1,0 +1,26 @@
+version: "2.1"
+services:
+  code-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/linuxserver/code-server
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - PASSWORD= #optional
+    volumes:
+      - ${CACHE}/config:/config
+      - /usr/bin/gcc:/bin/gcc
+      - /usr/bin/g++:/bin/g++
+      - /usr/bin/gdb:/bin/gdb 
+      - /usr/lib/gcc:/lib/gcc
+    networks:
+      - web_proxy
+    restart: unless-stopped
+
+networks:
+  web_proxy:
+    external: true

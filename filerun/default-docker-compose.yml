@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:10.1
+    container_name: filerun_db
+    restart: unless-stopped
+    networks:
+      - filerun_net
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: filerun
+      MYSQL_USER: filerun
+      MYSQL_PASSWORD: aFQWrw6HCSBm2xTG
+      MYSQL_DATABASE: filerun
+    volumes:
+      - ${CACHE}/mysql:/var/lib/mysql
+
+  web:
+    image: filerun/filerun
+    container_name: filerun
+    restart: unless-stopped
+    networks:
+      - filerun_net
+      - web_proxy
+    environment:
+      FR_DB_HOST: db
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerun
+      FR_DB_USER: filerun
+      FR_DB_PASS: aFQWrw6HCSBm2xTG
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_USER_ID: 33
+      APACHE_RUN_GROUP: www-data
+      APACHE_RUN_GROUP_ID: 33
+    depends_on:
+      - db
+    links:
+      - db:db
+    volumes:
+      - ${CACHE}/html:/var/www/html
+      - ${ROOT}/files:/user-files
+
+networks:
+  filerun_net:
+    driver: bridge
+  web_proxy:
+    external: true

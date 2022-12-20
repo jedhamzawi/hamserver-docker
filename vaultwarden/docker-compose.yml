@@ -1,0 +1,23 @@
+version: "3"
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    secrets:
+      - vw_admin_token
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+    volumes:
+      - ${CACHE}/vw-data:/data
+      - ${ROOT}/vw_set_token.sh:/etc/vaultwarden.sh
+    networks:
+      - web_proxy
+
+networks:
+  web_proxy:
+    external: true
+secrets:
+  vw_admin_token:
+    file: ${ROOT}/secrets/vw_admin_token

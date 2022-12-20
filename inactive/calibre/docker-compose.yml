@@ -1,0 +1,44 @@
+version: "2"
+services:
+  calibre:
+    image: linuxserver/calibre:5.42.0
+    container_name: calibre
+    restart: unless-stopped
+    networks:
+      - book_net
+    environment:
+      - UMASK_SET # For umask setting of Calibre, default if left unset is 022.
+      - TZ=America/Denver # Specify a timezone to use e.g. Europe/London.
+      - PUID=1000 # UID of user to take ownership of application/files
+      - PGID=1000 # GID of user to take ownership of application/files
+      - GUAC_USER=calibre-user # Username for the calibre desktop gui. (Optional)
+      - GUAC_PASS=calibre-pass # Password's md5 hash for the calibre desktop gui. (Optional)
+    volumes:
+      - /media/data/calibre:/config # Where calibre should store its database and library
+    ports:
+      - 9998:8081/tcp # Calibre webserver gui.
+      - 9999:8080/tcp # Calibre desktop gui.
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    networks:
+      - media-dl
+      - book_net
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - ./readarr/config:/config
+      - /media/data/calibre/books:/books #optional
+      - /media/data/media-dl/downloads:/downloads #optional
+    ports:
+      - 9595:8787
+    restart: unless-stopped
+
+networks:
+  book_net:
+    driver: bridge
+  media-dl:
+    external: true

@@ -1,0 +1,65 @@
+version: "2.3"
+services:
+  nextcloud:
+    image: nextcloud:fpm
+    container_name: nextcloud
+    restart: always
+    mem_limit: 2048m
+    mem_reservation: 512m
+    networks:
+      - nextcloud_net
+      - web_proxy
+    depends_on:
+      - nextcloud_db
+      - nextcloud_cache
+    links:
+      - nextcloud_db
+    entrypoint: sh -c '/bin/wait-for-it.sh nextcloud_db:5432 --timeout=5 -- /entrypoint.sh php-fpm'
+    environment:
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: replace-insecure-password
+      NEXTCLOUD_TRUSTED_DOMAINS: cloud.jakehamzawi.net
+      POSTGRES_HOST: nextcloud_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: shiny-postgres-pass-5
+      POSTGRES_DB: nextcloud_db
+      REDIS_HOST: nextcloud_cache
+      REDIS_HOST_PASSWORD: nextcloud_redis
+    volumes:
+      - ${CACHE}/manual_config/wait-for-it.sh:/bin/wait-for-it.sh
+      - ${CACHE}/var/www/html:/var/www/html
+      - ${ROOT}/data:/var/www/html/data
+      - ${CACHE}/var/www/html/config:/var/www/html/config
+        # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
+        # WARNING: [pool www] server reached pm.max_children setting (5), consider raising it
+      - ${CACHE}/manual_config/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
+
+  nextcloud_db:
+    container_name: nextcloud_db
+    image: postgres:12-alpine
+    restart: always
+    hostname: nextcloud_db
+    networks:
+      - nextcloud_net
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: shiny-postgres-pass-5
+    volumes:
+      - ${CACHE}/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+
+  nextcloud_cache:
+    container_name: nextcloud_cache
+    image: redis:alpine
+    restart: always
+    mem_limit: 2048m
+    mem_reservation: 512m
+    networks:
+      - nextcloud_net
+    command: redis-server --requirepass nextcloud_redis
+
+networks:
+  web_proxy:
+    external: true
+  nextcloud_net:
+    driver: bridge

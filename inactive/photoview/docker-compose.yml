@@ -1,0 +1,54 @@
+version: "3"
+services:
+  photo-db:
+    container_name: photo-db
+    image: postgres:12-alpine
+    restart: always
+    networks:
+      - photo_net
+    environment:
+      POSTGRES_DB: photoview
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: photosecret
+    volumes:
+      - ${CACHE}/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+
+  photoview:
+    image: viktorstrate/photoview:2
+    restart: always
+    privileged: true
+    networks:
+      - web_proxy
+      - photo_net
+    ports:
+      - "8888:80"
+    depends_on:
+      - photo-db
+    container_name: photoview
+    environment:
+      - PHOTOVIEW_DATABASE_DRIVER=postgres
+      - PHOTOVIEW_POSTGRES_URL=postgresql://postgres:photosecret@photo-db/photoview
+      - PHOTOVIEW_LISTEN_IP=photoview
+      - PHOTOVIEW_LISTEN_PORT=80
+      - PHOTOVIEW_MEDIA_CACHE=/app/cache
+
+      # Optional: To enable map related features, you need to create a mapbox token.
+      # A token can be generated for free here https://account.mapbox.com/access-tokens/
+      # It's a good idea to limit the scope of the token to your own domain, to prevent others from using it.
+      - MAPBOX_TOKEN=
+
+    volumes:
+      - ${CACHE}/cache:/app/cache
+      - ${DATA}/nextcloud/data/hamsesh/files/Photos:/photos/Jake
+      - ${DATA}/nextcloud/data/viola.bevziuk/files/Photos:/photos/Viola
+      # Change This: to the directory where your photos are located on your server.
+      # If the photos are located at `/home/user/photos`, then change this value
+      # to the following: `/home/user/photos:/photos:ro`.
+      # You can mount multiple paths, if your photos are spread across multiple directories.
+
+networks:
+  web_proxy:
+    external: true
+  photo_net:
+    driver: bridge

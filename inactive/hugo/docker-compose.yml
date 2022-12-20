@@ -1,0 +1,10 @@
+version: "3.0"
+services:
+  hugo:
+    image: klakegg/hugo:alpine
+    container_name: hugo
+    command: server
+    volumes:
+      - ${CACHE}/quickstart:/src
+    ports:
+      - "1313:1313"
