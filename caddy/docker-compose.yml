@@ -11,10 +11,10 @@ services:
       - 443:443
     volumes:
       - ${ROOT}/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ${CACHE}/caddy-config:/config
-      - ${CACHE}/caddy-data:/data
-      - ${DATA}/nextcloud/var/www/html:/nextcloud/var/www/html
-      - ${DATA}/nextcloud/data:/nextcloud/var/data
+      - ${CACHE}/caddy/caddy-config:/config
+      - ${CACHE}/caddy/caddy-data:/data
+      - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html
+      - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
     environment:
       - LOG_FILE=${LOG_FILE}
       - EMAIL=${EMAIL}
