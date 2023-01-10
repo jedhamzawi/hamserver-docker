@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   caddy:
-    image: caddy:2
+    image: caddy:2-alpine
     container_name: caddy
     restart: always
     networks:
@@ -13,8 +13,8 @@ services:
       - ${ROOT}/Caddyfile:/etc/caddy/Caddyfile:ro
       - ${CACHE}/caddy/caddy-config:/config
       - ${CACHE}/caddy/caddy-data:/data
-      - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html
-      - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
+#      - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html
+#      - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
     environment:
       - LOG_FILE=${LOG_FILE}
       - EMAIL=${EMAIL}
@@ -22,3 +22,4 @@ services:
 networks:
   web_proxy:
     external: true 
+

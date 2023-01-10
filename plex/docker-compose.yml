@@ -9,11 +9,12 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - VERSION=docker
+      - TZ=${TZ}
     volumes:
-      - ${ROOT}/config:/config
-      - ${ROOT}/tv:/tv
-      - ${ROOT}/movies:/movies
-      - ${ROOT}/music:/music
+      - ${CACHE}/config:/config
+      - ${DATA}/tv:/tv
+      - ${DATA}/movies:/movies
+      - ${DATA}/music:/music
     ports:
       - 32400:32400
       - 3005:3005

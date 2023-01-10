@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   nextcloud:
-    image: nextcloud:fpm
+    image: nextcloud:stable-fpm
     container_name: nextcloud
     restart: always
     mem_limit: 2048m
@@ -32,7 +32,7 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/nextcloud_postgres_password
       POSTGRES_DB_FILE: /run/secrets/nextcloud_postgres_db
       REDIS_HOST: nextcloud_cache
-      REDIS_HOST_PASSWORD: passtest
+      REDIS_HOST_PASSWORD_FILE: /run/secrets/nextcloud_redis_password
     volumes:
       - ${ROOT}/wait-for-it.sh:/wait-for-it.sh
       - ${CACHE}/var/www/html:/var/www/html
@@ -71,7 +71,7 @@ services:
       - nextcloud_redis_password
     volumes:
       - ${ROOT}/redis-entrypoint.sh:/entrypoint.sh
-    command: redis-server --requirepass passtest
+    command: /entrypoint.sh
 
 networks:
   web_proxy:
