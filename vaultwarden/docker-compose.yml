@@ -9,9 +9,9 @@ services:
     environment:
       - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false
+      - ADMIN_TOKEN_FILE=/run/secrets/vw_admin_token
     volumes:
       - ${CACHE}/vw-data:/data
-      - ${ROOT}/vw_set_token.sh:/etc/vaultwarden.sh
     networks:
       - web_proxy
 

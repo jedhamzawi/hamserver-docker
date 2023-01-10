@@ -13,8 +13,8 @@ services:
       - ${ROOT}/Caddyfile:/etc/caddy/Caddyfile:ro
       - ${CACHE}/caddy/caddy-config:/config
       - ${CACHE}/caddy/caddy-data:/data
-#      - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html
-#      - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
+      - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html
+      - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
     environment:
       - LOG_FILE=${LOG_FILE}
       - EMAIL=${EMAIL}
