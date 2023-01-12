@@ -12,6 +12,7 @@ services:
       - ./server-entrypoint.sh:/bin/server-entrypoint.sh
     env_file:
       - .env
+      - ./secrets/secrets.env
     secrets:
       - immich_db_user
       - immich_db_password
@@ -38,6 +39,7 @@ services:
       - ./micro-entrypoint.sh:/bin/micro-entrypoint.sh
     env_file:
       - .env
+      - ./secrets/secrets.env
     secrets:
       - immich_db_user
       - immich_db_password
@@ -76,6 +78,7 @@ services:
       - immich_net
     env_file:
       - .env
+      - ./secrets/secrets.env
     #environment:
       # Rename these values for svelte public interface
       #- PUBLIC_IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
