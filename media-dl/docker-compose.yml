@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     volumes:
       - /dev/net:/dev/net:z # tun device
-      - ${MEDIA_ROOT}/config/vpn:/vpn # OpenVPN configuration
+      - ${CACHE}/config/vpn:/vpn # OpenVPN configuration
     security_opt:
       - label:disable
     ports:
@@ -28,7 +28,7 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - ${MEDIA_ROOT}/downloads:/downloads # downloads folder
-      - ${MEDIA_ROOT}/config/deluge:/config # config files
+      - ${CACHE}/config/deluge:/config # config files
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
@@ -39,7 +39,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${MEDIA_ROOT}/config/prowlarr:/config
+      - ${CACHE}/config/prowlarr:/config
     ports:
       - 9696:9696
     networks:
@@ -70,7 +70,7 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${MEDIA_ROOT}/config/sonarr:/config # config files
+      - ${CACHE}/config/sonarr:/config # config files
       - ${PLEX_ROOT}/tv:/tv # tv shows folder
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
     ports:
@@ -88,7 +88,7 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${MEDIA_ROOT}/config/radarr:/config # config files
+      - ${CACHE}/config/radarr:/config # config files
       - ${PLEX_ROOT}/movies:/movies # movies folder
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
     ports:
@@ -106,7 +106,7 @@ services:
       - TZ=${TZ} # timezone, defined in .env
       - UMASK_SET=022 #optional
     volumes:
-      - ${MEDIA_ROOT}/config/bazarr:/config # config files
+      - ${CACHE}/config/bazarr:/config # config files
       - ${PLEX_ROOT}/movies:/movies # movies folder
       - ${PLEX_ROOT}/tv:/tv # tv shows folder
     ports:
@@ -123,7 +123,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${MEDIA_ROOT}/config/lidarr:/config
+      - ${CACHE}/config/lidarr:/config
       - ${PLEX_ROOT}/music:/music
       - ${MEDIA_ROOT}/downloads:/downloads
     ports:

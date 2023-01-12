@@ -10,6 +10,8 @@ services:
       - PGID=${PGID}
       - VERSION=docker
       - TZ=${TZ}
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - ${CACHE}/config:/config
       - ${DATA}/tv:/tv

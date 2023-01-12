@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.5'
 
 services:
   db:
@@ -29,6 +29,7 @@ services:
     secrets:
       - filerun_db_password
     environment:
+      TZ: ${TZ}
       FR_DB_HOST: db
       FR_DB_PORT: 3306
       FR_DB_NAME: filerun
@@ -49,6 +50,7 @@ services:
 
 networks:
   filerun_net:
+    name: filerun_net
     driver: bridge
   web_proxy:
     external: true

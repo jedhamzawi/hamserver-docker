@@ -2,11 +2,9 @@
   email {$EMAIL}
 }
 
-# Filerun configuration
-#
-#files.jakehamzawi.net {
-#  reverse_proxy filerun:80
-#}
+files.jakehamzawi.net {
+  reverse_proxy filerun:80
+}
 
 ombi.jakehamzawi.net {
   reverse_proxy ombi:3579
@@ -41,42 +39,7 @@ cal.jakehamzawi.net {
   reverse_proxy radicale:5232
 }
 
-cloud.jakehamzawi.net {
-
-        log {
-            level ERROR
-        }
-
-        root    * /nextcloud/var/www/html
-        file_server
-
-        php_fastcgi nextcloud:9000 {
-            env front_controller_active true
-            root /var/www/html
-        }
-        header {
-               # enable HSTS
-               # Strict-Transport-Security max-age=31536000;
-        }
-
-        redir /.well-known/carddav /remote.php/dav 301
-        redir /.well-known/caldav /remote.php/dav 301
-
-# .htaccess / data / config / ... shouldn't be accessible from outside
-        @forbidden {
-                path    /.htaccess
-                path    /data/*
-                path    /config/*
-                path    /db_structure
-                path    /.xml
-                path    /README
-                path    /3rdparty/*
-                path    /lib/*
-                path    /templates/*
-                path    /occ
-                path    /console.php
-        }
-
-        respond @forbidden 404
-
+photos.jakehamzawi.net {
+  reverse_proxy immich_proxy:8080
 }
+

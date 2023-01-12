@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 services:
   photo-db:
     container_name: photo-db
@@ -6,10 +6,13 @@ services:
     restart: always
     networks:
       - photo_net
+    secrets:
+      - photoview_postgres_db
+      - photoview_postgres_password
     environment:
-      POSTGRES_DB: photoview
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: photosecret
+      POSTGRES_DB_FILE: /run/secrets/photoview_postgres_db
+      POSTGRES_USER: photoview
+      POSTGRES_PASSWORD_FILE: /run/secrets/photoview_postgres_password
     volumes:
       - ${CACHE}/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
@@ -40,8 +43,8 @@ services:
 
     volumes:
       - ${CACHE}/cache:/app/cache
-      - ${DATA}/nextcloud/data/hamsesh/files/Photos:/photos/Jake
-      - ${DATA}/nextcloud/data/viola.bevziuk/files/Photos:/photos/Viola
+      - ${DATA}/filerun/files/hamsesh/Photos:/photos/Jake
+      - ${DATA}/filerun/files/viola.bevziuk/Photos:/photos/Viola
       # Change This: to the directory where your photos are located on your server.
       # If the photos are located at `/home/user/photos`, then change this value
       # to the following: `/home/user/photos:/photos:ro`.
@@ -51,4 +54,5 @@ networks:
   web_proxy:
     external: true
   photo_net:
+    name: photo_net
     driver: bridge
