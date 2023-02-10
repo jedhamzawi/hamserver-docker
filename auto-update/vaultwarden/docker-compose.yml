@@ -20,4 +20,4 @@ networks:
     external: true
 secrets:
   vw_admin_token:
-    file: ${ROOT}/secrets/vw_admin_token
+    file: ./secrets/vw_admin_token

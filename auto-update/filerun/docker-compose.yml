@@ -46,7 +46,7 @@ services:
     volumes:
       - ${CACHE}/html:/var/www/html
       - ${DATA}/files:/user-files
-      - ${ROOT}/docker-entrypoint.sh:/filerun/docker-entrypoint.sh
+      - ./docker-entrypoint.sh:/filerun/docker-entrypoint.sh
 
 networks:
   filerun_net:
@@ -57,6 +57,6 @@ networks:
 
 secrets:
   filerun_db_root_password:
-    file: ${ROOT}/secrets/filerun_db_root_password
+    file: ./secrets/filerun_db_root_password
   filerun_db_password:
-    file: ${ROOT}/secrets/filerun_db_password
+    file: ./secrets/filerun_db_password

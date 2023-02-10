@@ -79,9 +79,9 @@ services:
     env_file:
       - .env
       - ./secrets/secrets.env
-    #environment:
+    environment:
       # Rename these values for svelte public interface
-      #- PUBLIC_IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
+      - PUBLIC_IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
     restart: always
 
   redis:

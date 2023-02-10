@@ -10,7 +10,7 @@ services:
       - 80:80  # Needed for the ACME HTTP-01 challenge.
       - 443:443
     volumes:
-      - ${ROOT}/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ${CACHE}/caddy/caddy-config:/config
       - ${CACHE}/caddy/caddy-data:/data
       - ${CACHE}/nextcloud/var/www/html:/nextcloud/var/www/html

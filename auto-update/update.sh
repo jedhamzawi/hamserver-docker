@@ -1,7 +1,7 @@
-ROOT=/home/hamsesh/docker
+ROOT=/home/hamsesh/docker/auto-update
 
 for d in $ROOT/*/ ; do
-    test "$d" = $ROOT/inactive/ && continue
+    test "$d" = $ROOT/manual-update/ && continue
     cd "$d"
     docker compose down
     docker compose pull
