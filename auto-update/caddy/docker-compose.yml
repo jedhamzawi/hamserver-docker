@@ -4,6 +4,8 @@ services:
     image: caddy:2-alpine
     container_name: caddy
     restart: always
+    env_file:
+      - ./secrets/secrets.env
     networks:
       - web_proxy
     ports:
@@ -17,7 +19,7 @@ services:
       - ${NEXTCLOUD_DATA}:/nextcloud/var/www/html/data
     environment:
       - LOG_FILE=${LOG_FILE}
-      - EMAIL=${EMAIL}
+      - TZ=${TZ}
 
 networks:
   web_proxy:
