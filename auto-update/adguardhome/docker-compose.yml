@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  adguardhome:
+    container_name: adguardhome
+    image: adguard/adguardhome
+    networks:
+      - web_proxy
+    volumes:
+      - ${CACHE}/work:/opt/adguardhome/work
+      - ${CACHE}/conf:/opt/adguardhome/conf
+    ports:
+      - "53:53/tcp" #DNS
+      - "53:53/udp"
+      #- "67:67/udp" #DHCP
+      #- "68:68/tcp"
+      #- "68:68/udp"
+      #- "3000:3000/tcp" #Admin
+      - "3001:80" #Web
+      #- "784:784/udp" #DNS-over-QUIC
+      #- "5443:5443/tcp" #DNSCrypt
+      #- "5443:5443/udp"
+
+networks:
+  web_proxy:
+    external: true

@@ -16,7 +16,7 @@ services:
     environment:
       TZ: ${TZ}
       WEBPASSWORD_FILE: '/run/secrets/pihole_password'
-      PIHOLE_DNS_: '1.1.1.1;8.8.8.8'
+      PIHOLE_DNS_: '1.1.1.2,1.0.0.2'
       DHCP_ACTIVE: false
     # Volumes store your data between container upgrades
     volumes:

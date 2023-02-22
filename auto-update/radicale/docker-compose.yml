@@ -7,8 +7,8 @@ services:
   radicale:
     image: tomsquest/docker-radicale
     container_name: radicale
-    ports:
-      - 5232:5232
+    #ports:
+      #- 5232:5232
     networks:
       - web_proxy
     init: true

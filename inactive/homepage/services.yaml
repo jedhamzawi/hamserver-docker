@@ -1,0 +1,19 @@
+- Group A:
+    - Sonarr:
+        icon: sonarr.png
+        href: http://sonarr/
+        description: Series management
+        widget:
+          type: sonarr
+          url: http://sonarr.host
+          key: apikeyapikeyapikeyapikeyapikey
+
+- Group B:
+    - Radarr:
+        icon: radarr.png
+        href: http://radarr.host/
+        description: Movie management
+        widget:
+          type: radarr
+          url: http://radarr.host
+          key: apikeyapikeyapikeyapikeyapikey

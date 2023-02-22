@@ -114,6 +114,8 @@ services:
     networks:
       - immich_net
       - web_proxy
+    #ports:
+      #- "8784:8080"
     environment:
       # Make sure these values get passed through from the env file
       - IMMICH_SERVER_URL=${IMMICH_SERVER_URL}

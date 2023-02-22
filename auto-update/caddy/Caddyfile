@@ -10,7 +10,7 @@ ombi.jakehamzawi.net {
   reverse_proxy ombi:3579
 }
 
-bw.jakehamzawi.net {
+vw.jakehamzawi.net, bw.jakehamzawi.net {
   log {
     level INFO
     output file {$LOG_FILE} {
