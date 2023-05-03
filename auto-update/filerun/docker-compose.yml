@@ -15,6 +15,7 @@ services:
       MYSQL_USER: filerun
       MYSQL_PASSWORD_FILE: /run/secrets/filerun_db_password
       MYSQL_DATABASE: filerun
+      TZ: ${TZ}
     volumes:
       - ${CACHE}/mysql:/var/lib/mysql
 

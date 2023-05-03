@@ -1,8 +1,10 @@
 version: "2.1"
 services:
   plex:
-    image: lscr.io/linuxserver/plex:latest
+    image: plexinc/pms-docker:latest
     container_name: plex
+    env_file:
+      - ./secrets/secrets.env
     networks:
       - media_dl_net
     environment:
@@ -10,6 +12,7 @@ services:
       - PGID=${PGID}
       - VERSION=docker
       - TZ=${TZ}
+#     - ADVERTISE_IP    # Set in secrets.env
     devices:
       - /dev/dri:/dev/dri
     volumes:

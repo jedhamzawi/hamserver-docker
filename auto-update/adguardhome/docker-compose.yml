@@ -6,6 +6,7 @@ services:
     image: adguard/adguardhome
     networks:
       - web_proxy
+    restart: unless-stopped
     volumes:
       - ${CACHE}/work:/opt/adguardhome/work
       - ${CACHE}/conf:/opt/adguardhome/conf

@@ -43,3 +43,9 @@ photos.jakehamzawi.net {
   reverse_proxy immich_proxy:8080
 }
 
+#
+# Whoogle config
+#
+#search.jakehamzawi.net {
+#  reverse_proxy whoogle-search:5000
+#}

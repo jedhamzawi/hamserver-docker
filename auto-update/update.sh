@@ -8,4 +8,4 @@ for d in $ROOT/*/ ; do
     docker compose pull && docker compose up -d
 done
 docker system prune -af
-echo "Update completed! $(date)" >> /var/log/docker/update.log
+echo "Update completed! $(date)" >> $ROOT/update.log
