@@ -11,10 +11,11 @@ services:
       - ${CACHE}/config/vpn:/vpn # OpenVPN configuration
     security_opt:
       - label:disable
-    command: '-f "" -r 172.19.0.0/16' # enable firewall and route local network traffic
+    ports:
+      - 8112:8112 # port for deluge to be available from outside
+    command: '-f "" -r 192.168.86.0/24' # enable firewall and route local network traffic
     networks:
       - media_dl_net
-      - web_proxy
 
   deluge:
     container_name: deluge
@@ -39,9 +40,10 @@ services:
       - TZ=${TZ}
     volumes:
       - ${CACHE}/config/prowlarr:/config
+    ports:
+      - 9696:9696
     networks:
       - media_dl_net
-      - web_proxy
 
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
@@ -53,6 +55,8 @@ services:
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=${TZ}
+    ports:
+      - 8191:8191
     networks:
       - media_dl_net
 
@@ -69,9 +73,10 @@ services:
       - ${CACHE}/config/sonarr:/config # config files
       - ${PLEX_ROOT}/tv:/tv # tv shows folder
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
+    ports:
+      - 8989:8989
     networks:
       - media_dl_net
-      - web_proxy
 
   radarr:
     container_name: radarr
@@ -86,9 +91,10 @@ services:
       - ${CACHE}/config/radarr:/config # config files
       - ${PLEX_ROOT}/movies:/movies # movies folder
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
+    ports:
+      - 7878:7878
     networks:
       - media_dl_net
-      - web_proxy
 
   bazarr:
     container_name: bazarr
@@ -103,9 +109,10 @@ services:
       - ${CACHE}/config/bazarr:/config # config files
       - ${PLEX_ROOT}/movies:/movies # movies folder
       - ${PLEX_ROOT}/tv:/tv # tv shows folder
+    ports:
+      - 6767:6767
     networks:
       - media_dl_net
-      - web_proxy 
 
   lidarr:
     image: linuxserver/lidarr
@@ -119,12 +126,11 @@ services:
       - ${CACHE}/config/lidarr:/config
       - ${PLEX_ROOT}/music:/music
       - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - 8686:8686
     networks:
       - media_dl_net
-      - web_proxy
 
 networks:
   media_dl_net:
-    external: true
-  web_proxy:
     external: true

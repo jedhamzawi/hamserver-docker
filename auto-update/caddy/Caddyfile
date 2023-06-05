@@ -2,9 +2,111 @@
   email {$EMAIL}
 }
 
-files.jakehamzawi.net {
-  reverse_proxy filerun:80
+################################################
+#
+# LOCAL DOMAINS
+#
+################################################
+
+# Nextcloud
+cloud.local.jakehamzawi.net {
+
+        tls internal
+        log {
+            level ERROR
+        }
+
+        root    * /nextcloud/var/www/html
+        file_server
+
+        php_fastcgi nextcloud:9000 {
+            env front_controller_active true
+            root /var/www/html
+        }
+        header {
+               # enable HSTS
+               # Strict-Transport-Security max-age=31536000;
+        }
+
+        redir /.well-known/carddav /remote.php/dav 301
+        redir /.well-known/caldav /remote.php/dav 301
+
+# .htaccess / data / config / ... shouldn't be accessible from outside
+        @forbidden {
+                path    /.htaccess
+                path    /data/*
+                path    /config/*
+                path    /db_structure
+                path    /.xml
+                path    /README
+                path    /3rdparty/*
+                path    /lib/*
+                path    /templates/*
+                path    /occ
+                path    /console.php
+        }
+
+        respond @forbidden 404
+
 }
+
+# Immich
+photos.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy immich_proxy:8080
+}
+
+# Radicale
+cal.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy radicale:5232
+}
+
+#####################
+# MEDIA-DL
+#####################
+
+deluge.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy vpn:8112
+}
+
+prowlarr.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy prowlarr:9696
+}
+
+sonarr.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy sonarr:8989
+}
+
+radarr.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy radarr:7878
+}
+
+bazarr.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy bazarr:6767
+}
+
+lidarr.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy lidarr:8686
+}
+
+####################
+# END MEDIA-DL
+####################
+
+
+##########################################################
+#
+# END LOCAL DOMAINS
+#
+##########################################################
+
 
 ombi.jakehamzawi.net {
   reverse_proxy ombi:3579
@@ -35,17 +137,3 @@ vw.jakehamzawi.net, bw.jakehamzawi.net {
   }
 }
 
-cal.jakehamzawi.net {
-  reverse_proxy radicale:5232
-}
-
-photos.jakehamzawi.net {
-  reverse_proxy immich_proxy:8080
-}
-
-#
-# Whoogle config
-#
-#search.jakehamzawi.net {
-#  reverse_proxy whoogle-search:5000
-#}

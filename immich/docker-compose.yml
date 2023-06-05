@@ -56,22 +56,6 @@ services:
       - typesense
     restart: always
 
-  typesense:
-    container_name: immich_typesense
-    image: typesense/typesense:0.24.0
-    env_file:
-      - ./secrets/secrets.env
-    networks:
-      - immich_net
-    environment:
-#      Set in secrets.env
-#      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
-      - TYPESENSE_DATA_DIR=/data
-    logging:
-      driver: none
-    volumes:
-      - ${CACHE}/typesense:/data
-
   immich-machine-learning:
     container_name: immich_machine_learning
     image: altran1502/immich-machine-learning:release
@@ -100,6 +84,22 @@ services:
       # Rename these values for svelte public interface
       - PUBLIC_IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
     restart: always
+
+  typesense:
+    container_name: immich_typesense
+    image: typesense/typesense:0.24.0
+    env_file:
+      - ./secrets/secrets.env
+    networks:
+      - immich_net
+    environment:
+#      Set in secrets.env
+#      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_DATA_DIR=/data
+    logging:
+      driver: none
+    volumes:
+      - ${CACHE}/typesense:/data
 
   redis:
     container_name: immich_redis
@@ -131,8 +131,6 @@ services:
     networks:
       - immich_net
       - web_proxy
-    #ports:
-      #- "8784:8080"
     environment:
       # Make sure these values get passed through from the env file
       - IMMICH_SERVER_URL=${IMMICH_SERVER_URL}

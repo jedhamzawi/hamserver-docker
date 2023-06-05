@@ -4,10 +4,14 @@ services:
     image: syncthing/syncthing
     container_name: syncthing
     hostname: new-hamserver
+    ports:
+      - 8384:8384 # GUI
+      - 22000:22000
+      - 21027:21027 # Discovery
     environment:
       - PUID=1000
       - PGID=1000
     volumes:
       - /mnt/fridge/syncthing:/var/syncthing
-    network_mode: host
+      - /mnt/fridge/files/jake:/var/syncthing/jake
     restart: unless-stopped

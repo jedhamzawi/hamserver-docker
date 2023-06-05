@@ -20,13 +20,15 @@ services:
       - ${CACHE}/mysql:/var/lib/mysql
 
   web:
-    image: filerun/filerun
+    image: filerun/filerun:7.4
     container_name: filerun
     restart: unless-stopped
     entrypoint: /filerun/docker-entrypoint.sh
     networks:
       - filerun_net
       - web_proxy
+    ports:
+      - 9001:80
     secrets:
       - filerun_db_password
     environment:

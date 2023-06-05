@@ -2,14 +2,14 @@ version: "3.1"
 
 services:
   nextcloud:
-    image: nextcloud:stable-fpm
+    image: nextcloud:fpm
     container_name: nextcloud
     restart: always
     mem_limit: 2048m
     mem_reservation: 512m
     networks:
-      - nextcloud_net
       - web_proxy
+      - nextcloud_net
     depends_on:
       - nextcloud_db
       - nextcloud_cache
@@ -22,25 +22,27 @@ services:
       - nextcloud_postgres_db
       - nextcloud_postgres_user
       - nextcloud_postgres_password
-      - nextcloud_redis_password
+#      - nextcloud_redis_password
     environment:
+      TZ: ${TZ}
       NEXTCLOUD_ADMIN_USER_FILE: /run/secrets/nextcloud_admin_user
       NEXTCLOUD_ADMIN_PASSWORD_FILE: /run/secrets/nextcloud_admin_password
-      NEXTCLOUD_TRUSTED_DOMAINS: cloud.jakehamzawi.net
+      NEXTCLOUD_TRUSTED_DOMAINS: "cloud.local.jakehamzawi.net cloud.jakehamzawi.net"
       POSTGRES_HOST: nextcloud_db
       POSTGRES_USER_FILE: /run/secrets/nextcloud_postgres_user
       POSTGRES_PASSWORD_FILE: /run/secrets/nextcloud_postgres_password
       POSTGRES_DB_FILE: /run/secrets/nextcloud_postgres_db
       REDIS_HOST: nextcloud_cache
-      #REDIS_HOST_PASSWORD_FILE: /run/secrets/nextcloud_redis_password
+      REDIS_HOST_PASSWORD:
+#      REDIS_HOST_PASSWORD_FILE: /run/secrets/nextcloud_redis_password
     volumes:
-      - ${ROOT}/wait-for-it.sh:/wait-for-it.sh
+      - ./wait-for-it.sh:/wait-for-it.sh
       - ${CACHE}/var/www/html:/var/www/html
       - ${DATA}/data:/var/www/html/data
       - ${CACHE}/var/www/html/config:/var/www/html/config
         # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
         # WARNING: [pool www] server reached pm.max_children setting (5), consider raising it
-      - ${ROOT}/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
+      - ./www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
 
   nextcloud_db:
     container_name: nextcloud_db
@@ -65,13 +67,14 @@ services:
     restart: always
     mem_limit: 2048m
     mem_reservation: 512m
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - nextcloud_net
-    secrets:
-      - nextcloud_redis_password
     volumes:
-      - ${ROOT}/redis-entrypoint.sh:/entrypoint.sh
-    command: redis-server
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+#    secrets:
+#      - nextcloud_redis.acl
+
 
 networks:
   web_proxy:
@@ -81,14 +84,14 @@ networks:
 
 secrets:
   nextcloud_admin_user:
-    file: ${ROOT}/secrets/nextcloud_admin_user
+    file: ./secrets/nextcloud_admin_user
   nextcloud_admin_password:
-    file: ${ROOT}/secrets/nextcloud_admin_password
+    file: ./secrets/nextcloud_admin_password
   nextcloud_postgres_db:
-    file: ${ROOT}/secrets/nextcloud_postgres_db
+    file: ./secrets/nextcloud_postgres_db
   nextcloud_postgres_user:
-    file: ${ROOT}/secrets/nextcloud_postgres_user
+    file: ./secrets/nextcloud_postgres_user
   nextcloud_postgres_password:
-    file: ${ROOT}/secrets/nextcloud_postgres_password
-  nextcloud_redis_password:
-    file: ${ROOT}/secrets/nextcloud_redis_password
+    file: ./secrets/nextcloud_postgres_password
+#  nextcloud_redis_password:
+#    file: ./secrets/nextcloud_redis_password

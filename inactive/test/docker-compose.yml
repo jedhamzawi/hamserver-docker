@@ -1,0 +1,11 @@
+version: "3.1"
+
+services:
+  nextcloud_db:
+    container_name: nextcloud_db
+    image: postgres:alpine
+    restart: always
+    hostname: nextcloud_db
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
