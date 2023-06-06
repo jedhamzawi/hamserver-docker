@@ -33,6 +33,8 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/nextcloud_postgres_password
       POSTGRES_DB_FILE: /run/secrets/nextcloud_postgres_db
       REDIS_HOST: nextcloud_cache
+      # Redis password authentication is apparently broken (unable to run
+      # occ commands when password is enabled). Password is blank
       REDIS_HOST_PASSWORD:
 #      REDIS_HOST_PASSWORD_FILE: /run/secrets/nextcloud_redis_password
     volumes:
