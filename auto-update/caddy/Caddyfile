@@ -62,6 +62,12 @@ cal.local.jakehamzawi.net {
   reverse_proxy radicale:5232
 }
 
+# Adguard Home
+dns.local.jakehamzawi.net {
+  tls internal
+  reverse_proxy adguardhome:80
+}
+
 #####################
 # MEDIA-DL
 #####################

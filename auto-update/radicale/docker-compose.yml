@@ -10,7 +10,7 @@ services:
     #ports:
       #- 5232:5232
     networks:
-      - web_proxy
+      - radicale_proxy
     init: true
     read_only: true
     security_opt:
@@ -33,5 +33,5 @@ services:
       - ${CACHE}/local/users:/etc/radicale/users:ro
 
 networks:
-  web_proxy:
+  radicale_proxy:
     external: true

@@ -3,25 +3,23 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich_server
-    image: altran1502/immich-server:release
-    entrypoint: ["/bin/sh", "/bin/server-entrypoint.sh"]
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    command: ["start.sh", "immich" ]
     networks:
       - immich_net
     volumes:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
-      - ./server-entrypoint.sh:/bin/server-entrypoint.sh
     env_file:
       - .env
       - ./secrets/secrets.env
     secrets:
+      - immich_db_name
       - immich_db_user
       - immich_db_password
-      - immich_db_name
     environment:
-      - NODE_ENV=production
-      - DB_USERNAME_FILE=/run/secrets/immich_db_user
-      - DB_PASSWORD_FILE=/run/secrets/immich_db_password
-      - DB_DATABASE_NAME_FILE=/run/secrets/immich_db_name
+      DB_DATABASE_NAME_FILE: /run/secrets/immich_db_name
+      DB_USERNAME_FILE: /run/secrets/immich_db_user
+      DB_PASSWORD_FILE: /run/secrets/immich_db_password
     depends_on:
       - redis
       - database
@@ -30,26 +28,28 @@ services:
 
   immich-microservices:
     container_name: immich_microservices
-    image: altran1502/immich-server:release
-    entrypoint: ["/bin/sh", "/bin/micro-entrypoint.sh"]
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    extends:
+      file: hwaccel.yml
+      service: hwaccel
+    command: [ "start.sh", "microservices" ]
     networks:
       - immich_net
     volumes:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /usr/src/app/.reverse-geocoding-dump
-      - ./micro-entrypoint.sh:/bin/micro-entrypoint.sh
     env_file:
       - .env
       - ./secrets/secrets.env
     secrets:
+      - immich_db_name
       - immich_db_user
       - immich_db_password
-      - immich_db_name
     environment:
-      - NODE_ENV=production
-      - DB_USERNAME_FILE=/run/secrets/immich_db_user
-      - DB_PASSWORD_FILE=/run/secrets/immich_db_password
-      - DB_DATABASE_NAME_FILE=/run/secrets/immich_db_name
+      NODE_ENV: production
+      DB_DATABASE_NAME_FILE: /run/secrets/immich_db_name
+      DB_USERNAME_FILE: /run/secrets/immich_db_user
+      DB_PASSWORD_FILE: /run/secrets/immich_db_password
     depends_on:
       - redis
       - database
@@ -58,8 +58,7 @@ services:
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    image: altran1502/immich-machine-learning:release
-    command: [ "python", "src/main.py" ]
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     networks:
       - immich_net
     volumes:
@@ -67,35 +66,31 @@ services:
       - ${CACHE}/ml-cache:/cache
     env_file:
       - .env
-    environment:
-      - NODE_ENV=production
     restart: always
 
   immich-web:
     container_name: immich_web
-    image: altran1502/immich-web:release
+    image: ghcr.io/immich-app/immich-web:${IMMICH_VERSION:-release}
     entrypoint: ["/bin/sh", "./entrypoint.sh"]
     networks:
       - immich_net
     env_file:
       - .env
       - ./secrets/secrets.env
-    environment:
-      # Rename these values for svelte public interface
-      - PUBLIC_IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
     restart: always
 
   typesense:
     container_name: immich_typesense
-    image: typesense/typesense:0.24.0
+    image: typesense/typesense:0.24.1
+    restart: always
     env_file:
       - ./secrets/secrets.env
     networks:
       - immich_net
     environment:
 #      Set in secrets.env
-#      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
-      - TYPESENSE_DATA_DIR=/data
+#      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+      TYPESENSE_DATA_DIR: /data
     logging:
       driver: none
     volumes:
@@ -103,24 +98,24 @@ services:
 
   redis:
     container_name: immich_redis
-    image: redis:6.2
+    image: redis:6.2-alpine
     restart: always
     networks:
       - immich_net
 
   database:
     container_name: immich_postgres
-    image: postgres:14
+    image: postgres:14-alpine
     networks:
       - immich_net
     secrets:
+      - immich_db_name
       - immich_db_user
       - immich_db_password
-      - immich_db_name
     environment: 
+      POSTGRES_DB_FILE: /run/secrets/immich_db_name
       POSTGRES_USER_FILE: /run/secrets/immich_db_user
       POSTGRES_PASSWORD_FILE: /run/secrets/immich_db_password
-      POSTGRES_DB_FILE: /run/secrets/immich_db_name
     volumes:
       - ${CACHE}/db:/var/lib/postgresql/data
     restart: always
@@ -130,11 +125,11 @@ services:
     image: altran1502/immich-proxy:release
     networks:
       - immich_net
-      - web_proxy
+      - immich_proxy
     environment:
       # Make sure these values get passed through from the env file
-      - IMMICH_SERVER_URL=${IMMICH_SERVER_URL}
-      - IMMICH_WEB_URL=${IMMICH_WEB_URL}
+      IMMICH_SERVER_URL: ${IMMICH_SERVER_URL}
+      IMMICH_WEB_URL: ${IMMICH_WEB_URL}
     logging:
       driver: none
     depends_on:
@@ -145,7 +140,7 @@ networks:
   immich_net:
     name: immich_net
     driver: bridge
-  web_proxy:
+  immich_proxy:
     external: true
 
 secrets:
@@ -155,4 +150,4 @@ secrets:
     file: ./secrets/immich_db_user
   immich_db_password:
     file: ./secrets/immich_db_password
-
+ 

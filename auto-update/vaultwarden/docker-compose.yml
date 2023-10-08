@@ -19,10 +19,10 @@ services:
     volumes:
       - ${CACHE}/vw-data:/data
     networks:
-      - web_proxy
+      - vaultwarden_proxy
 
 networks:
-  web_proxy:
+  vaultwarden_proxy:
     external: true
 secrets:
   vw_admin_token:

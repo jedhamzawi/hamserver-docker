@@ -11,12 +11,12 @@ services:
     volumes:
       - ${CACHE}/config:/config
     networks:
-      - web_proxy
       - media_dl_net
+      - ombi_proxy
 
 networks:
-  web_proxy:
-    external: true
   media_dl_net:
+    external: true
+  ombi_proxy:
     external: true
 

@@ -14,7 +14,7 @@ services:
     command: '-f "" -r 172.19.0.0/16' # enable firewall and route local network traffic
     networks:
       - media_dl_net
-      - web_proxy
+      - media_dl_proxy
 
   deluge:
     container_name: deluge
@@ -41,7 +41,7 @@ services:
       - ${CACHE}/config/prowlarr:/config
     networks:
       - media_dl_net
-      - web_proxy
+      - media_dl_proxy
 
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
@@ -71,7 +71,7 @@ services:
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
     networks:
       - media_dl_net
-      - web_proxy
+      - media_dl_proxy
 
   radarr:
     container_name: radarr
@@ -88,7 +88,7 @@ services:
       - ${MEDIA_ROOT}/downloads:/downloads # download folder
     networks:
       - media_dl_net
-      - web_proxy
+      - media_dl_proxy
 
   bazarr:
     container_name: bazarr
@@ -105,7 +105,7 @@ services:
       - ${PLEX_ROOT}/tv:/tv # tv shows folder
     networks:
       - media_dl_net
-      - web_proxy 
+      - media_dl_proxy
 
   lidarr:
     image: linuxserver/lidarr
@@ -121,10 +121,10 @@ services:
       - ${MEDIA_ROOT}/downloads:/downloads
     networks:
       - media_dl_net
-      - web_proxy
+      - media_dl_proxy
 
 networks:
   media_dl_net:
     external: true
-  web_proxy:
+  media_dl_proxy:
     external: true

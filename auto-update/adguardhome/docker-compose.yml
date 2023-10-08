@@ -5,7 +5,7 @@ services:
     container_name: adguardhome
     image: adguard/adguardhome
     networks:
-      - web_proxy
+      - adguardhome_proxy
     restart: unless-stopped
     volumes:
       - ${CACHE}/work:/opt/adguardhome/work
@@ -16,12 +16,12 @@ services:
       #- "67:67/udp" #DHCP
       #- "68:68/tcp"
       #- "68:68/udp"
+      #- "3001:80/tcp" #web
       #- "3000:3000/tcp" #Admin
-      - "3001:80" #Web
       #- "784:784/udp" #DNS-over-QUIC
       #- "5443:5443/tcp" #DNSCrypt
       #- "5443:5443/udp"
 
 networks:
-  web_proxy:
+  adguardhome_proxy:
     external: true

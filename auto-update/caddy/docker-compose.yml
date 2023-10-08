@@ -7,7 +7,13 @@ services:
     env_file:
       - ./secrets/secrets.env
     networks:
-      - web_proxy
+      - media_dl_proxy
+      - ombi_proxy
+      - radicale_proxy
+      - vaultwarden_proxy
+      - nextcloud_proxy
+      - immich_proxy
+      - adguardhome_proxy
     ports:
       - 80:80  # Needed for the ACME HTTP-01 challenge.
       - 443:443
@@ -22,6 +28,18 @@ services:
       - TZ=${TZ}
 
 networks:
-  web_proxy:
-    external: true 
+  media_dl_proxy:
+    external: true
+  ombi_proxy:
+    external: true
+  radicale_proxy:
+    external: true
+  vaultwarden_proxy:
+    external: true
+  nextcloud_proxy:
+    external: true
+  immich_proxy:
+    external: true
+  adguardhome_proxy:
+    external: true
 
